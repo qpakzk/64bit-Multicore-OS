@@ -23,11 +23,27 @@ START:
 	cmp si, 80 * 25 * 2
 	jl  .SCREENCLEARLOOP
 
+	mov si, 0
+	mov di, 0
 
-	mov byte [es: 0x00], 'M'
-	mov byte [es: 0x01], 0x4A
+.MESSAGELOOP:
+	mov cl, byte [si + MESSAGE1]
+
+	cmp cl, 0
+	je .MESSAGEEND
+
+	mov byte [es: di], cl
+
+	add si, 1
+	add di, 2
+
+	jmp .MESSAGELOOP
+	
+.MESSAGEEND:
 
 	jmp $
+
+MESSAGE1: db 'MINT64 OS Boot Loader Start~!!', 0
 
 	times 510 - ($ - $$) db 0x00
 
