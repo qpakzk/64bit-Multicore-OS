@@ -5,12 +5,19 @@ SECTION .text
 
 jmp 0x07C0:START
 
+TOTALSECTORCOUNT: dw 1024
+
 START:
 	mov ax, 0x07C0
 	mov ds, ax
 
 	mov ax, 0xB800
 	mov es, ax
+
+	mov ax, 0x0000
+	mov ss, ax
+	mov sp, 0xFFFE
+	mov bp, 0xFFFE
 
 	mov si, 0
 
@@ -26,6 +33,64 @@ START:
 	mov si, 0
 	mov di, 0
 
+	push MESSAGE1
+	push 0
+	push 0
+	call PRINTMESSAGE
+	add sp, 6
+
+	push IMAGELOADINGMESSAGE
+	push 1
+	push 0
+	call PRINTMESSAGE
+	add sp, 6
+
+RESETDISK:
+	mov ax, 0
+	mov dl, 0
+	int 0x13
+	jc HANDLEDISKERROR
+
+	mov si, 0x1000
+	mov es, si
+	mov bx, 0x0000
+
+	mov di, word [TOTALSECTORCOUNT]
+
+READDATA:
+	cmp di, 0
+	je READEND
+	sub di, 0x1
+
+	mov ah, 0x2
+	mov al, 0x1
+	mov ch, byte [TRACKNUMBER]
+	mov cl, byte [SECTORNUMBER]
+	mov dh, byte [HEADNUMBER]
+	mov dl, 0x00
+	int 0x13
+	jc HANDLEDISKERROR
+
+	add si, 0x0020
+	mov es, si
+
+	mov al, byte [SECTORNUMBER]
+	add al, 0x01
+	mov byte [SECTORNUMBER], al
+	cmp al, 19
+	jl READDATA
+
+	xor byte [HEADNUMBER], 0x01
+	mov byte [SECTORNUMBER], 0x01
+
+	cmp byte [HEADNUMBER], 0x00
+	jne READDATA
+
+	add byte [TRACKNUMER], 0x01
+	jmp READDATA
+READEND:
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 .MESSAGELOOP:
 	mov cl, byte [si + MESSAGE1]
 
