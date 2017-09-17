@@ -70,7 +70,7 @@ READDATA:
 	sub di, 0x1
 
 	; BIOS READ Function 호출
-	mov ah, 0x2
+	mov ah, 0x02
 	mov al, 0x1
 	mov ch, byte [TRACKNUMBER]
 	mov cl, byte [SECTORNUMBER]
@@ -115,6 +115,7 @@ HANDLEDISKERROR:
 	push 1
 	push 20
 	call PRINTMESSAGE
+	add sp, 6
 
 	jmp $
 

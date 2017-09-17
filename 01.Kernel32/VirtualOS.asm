@@ -3,10 +3,10 @@
 
 SECTION .text
 
-jmp 0x1000:0x0000
+jmp 0x1000:START
 
 SECTORCOUNT: dw 0x0000
-TOTALSECTORCOUNT equ 1024
+TOTALSECTORCOUNT: equ 1024
 
 ; 코드영역
 START:
@@ -19,7 +19,6 @@ START:
 	%assign i 0
 	%rep TOTALSECTORCOUNT
 		%assign i i + 1
-
 
 		mov ax, 2
 		mul word [SECTORCOUNT]
