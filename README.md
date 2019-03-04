@@ -4,20 +4,36 @@
 
 ## Prerequisite
 
-To develop ₩onix on macOS, it is necessary to install some programs.
+To develop ₩onix on macOS or Linux(Ubuntu), it is necessary to install some programs.
 
 > Suppose gcc is already installed.
 
 ### NASM
 
+* macOS
+
 ```sh
 $ brew install nasm
 ```
 
+* Ubuntu 18.04 LTS
+ 
+```sh
+$ sudo apt install nasm
+```
+
 ### QEMU
+
+* macOS
 
 ```sh
 $ brew install qemu
+```
+
+* Ubuntu 18.04 LTS
+
+```sh
+$ sudo apt install qemu
 ```
 
 ## Compile
